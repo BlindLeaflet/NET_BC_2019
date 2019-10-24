@@ -8,26 +8,40 @@ namespace ErrorHandling
 {
     class UserList
     {
-        public void Addstring fullName, UserProfile.Gender gender, DateTime date)
+        private List<UserProfile> users = new List<UserProfile>();
+
+        public void Add(string fullName, UserProfile.Genders gender, DateTime date)
         {
             //pārbaudes
             //1.datums nedrīkst but nākotnē
-            if (...)
+            if (date>DateTime.Now)
             {
-                throw new InputException(" ");
-    }
-            //2.datums nedrīkst būt mazāks par 01.01.1800
-            if(...)
-             {
-            throw new InputException(" ");
+                throw new InputException("Birth date cannot be in the future.");
             }
-            //3. pilnais vards nedrikst parsniegt 20 characters
-}
+            //2.datums nedrīkst būt mazāks par 01.01.1800
+            if(date< new DateTime(1800,1,1))
+            {
+            throw new InputException("Birth date cannot be before 01.01.1800");
+            }
+            //3. pilnais vards nedrikst parsniegt 20 simbolus
+            if (fullName.Length>20)
+            {
+                throw new InputException("Full name is too long");
+            }
+
+            //lietotaja izveide
+            UserProfile user = new UserProfile(fullName, date, gender);
+
+            //lietotaja pievienosana
+            users.Add(user);
+
+            Console.WriteLine($"User with age {user.Age()} added.");
+        }
 
 	
 
 	}
 
-        }
-    }
 }
+    
+

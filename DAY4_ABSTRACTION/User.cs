@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleHelpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,22 +7,26 @@ using System.Threading.Tasks;
 
 namespace DAY4_ABSTRACTION
 {
-    class User:BasePlayer
+    public class User:BasePlayer
     {
         //get name
         public override string GetName()
         {
-            return "Name";
+            if (!String.IsNullOrEmpty(Name))
+            {
+                return Name;
+            }
+
+            return ConsoleInput.GetText("Enter your name: ");
         }
         //guess number
         public override int GuessNumber()
         {
-            return 0;
+            CurrentGuess = ConsoleInput.GetInt("Enter your guess: ");
+
+            return CurrentGuess;
         }
-        //is number guessed
-        public override bool isNumberGuessed(int number)
-        {
-            return false;
-        }
+        
+        
     }
 }

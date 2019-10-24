@@ -2,27 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DAY4_ABSTRACTION
 {
-    class Robot:BasePlayer
+    public class Robot:BasePlayer
     {
         
         //get name
         public override string GetName()
         {
-            return "Name";
+            return "ROBOT";
         }
         //guess number
         public override int GuessNumber()
         {
-            return 0;
+            Thread.Sleep(1000);
+
+            //1.Generate random number from 1 to 500 and store it as ‘CurrentGuess’;
+            if (NextGuess == 0)
+            {
+                CurrentGuess = new Random().Next(1, 501);
+            }
+            else if (NextGuess == -1)
+            {
+                CurrentGuess = new Random().Next(1, CurrentGuess);
+            }
+            else if (NextGuess == 1)
+            {
+                CurrentGuess = new Random().Next(CurrentGuess + 1, 501);
+            }
+
+            //2.Return generated number.
+            return CurrentGuess;
         }
-        //is number guessed
-        public override bool isNumberGuessed(int number)
-        {
-            return false;
-        }
+        
+        
     }
 }
