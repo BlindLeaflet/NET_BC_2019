@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebShop.Logic;
 using WebShop.Models;
@@ -17,34 +18,24 @@ namespace WebShop.Controllers
         [HttpPost]
         public IActionResult SignIn(RegisteredUserModel model)
         {
+            //Ja izmanto registracijas modeli:
+            //ModelState.Remove("PasswordRepeat");
             if (ModelState.IsValid)
             {
-                UserManager manager = new UserManager();
-                var user = manager.GetByEmail(model.Email);
+                var manager = new UserManager();
+                var user = manager.GetByEmailAndPassword(model.Email, model.Password);
                 if (user == null)
                 {
-                    ModelState.AddModelError("error", "Account does not exist");
-                }
-                else if (manager.GetByEmailAndPassword(model.Email, model.Password) == null)
-                {
-                    ModelState.AddModelError("error", "Incorrect password");
-                }
+                    ModelState.AddModelError("error", "Invalid email/password");
+                }                
                 else
                 {
+                    HttpContext.Session.SetUserId(user.Id);
+                    HttpContext.Session.SetUserEmail( user.Email);
                     TempData["message"] = "Login succesful";
-                    return RedirectToAction("SignIn");
-                }
-                if (user==null)
-                {
-                    ModelState.AddModelError("error", "Invalid email/password!");
-                }
-                else
-                {
-                    HttpContext.Session.SetInt32("userId");
-                    HttpContext.Session.SetInt32("userId");
-                }
+                    return RedirectToAction("Index", "Item");
+                }             
                 
-
             }
             return View();
         }
@@ -76,6 +67,11 @@ namespace WebShop.Controllers
             }            
             
             return View();
+        }
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Item");
         }
 
     }
